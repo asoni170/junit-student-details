@@ -2,7 +2,8 @@ package com.amit.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
@@ -14,9 +15,9 @@ import com.amit.response.StudentResponse;
 import com.amit.service.StudentService;
 
 @RestController
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class StudentController implements ApiController {
 
-	@Autowired
 	private StudentService studentService;
 
 	@Override

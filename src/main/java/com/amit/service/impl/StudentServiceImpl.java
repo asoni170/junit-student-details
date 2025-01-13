@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -22,16 +24,14 @@ import com.amit.response.StudentResponse;
 import com.amit.service.StudentService;
 
 @Service
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class StudentServiceImpl implements StudentService {
 
-	@Autowired
 	private StudentDao studentDao;
-	
-	@Autowired
+
 	@Qualifier("asyncTaskExecutor")
 	private AsyncTaskExecutor executor;
-	
-	@Autowired
+
 	private StudentMapper studentMapper;
 
 	@Override
@@ -68,8 +68,11 @@ public class StudentServiceImpl implements StudentService {
 		
 		try {
 			result.setStudents(studentMapper.map(studentEntityList, addressListCF.get(), communicationListCF.get()));
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 			e.printStackTrace();
+		} catch (ExecutionException e) {
+			throw new RuntimeException(e);
 		}
 		
 		return result;
@@ -117,10 +120,13 @@ public class StudentServiceImpl implements StudentService {
 			
 			result.setStudents(studentMapper.map(studentEntityCF.get(), addressEntityCF.get(), communicationEntityCF.get()));
 			result.setTotalRecords(totalRecordCountCF.get());
-			
-			
-		} catch (InterruptedException | ExecutionException ex) {
-			ex.printStackTrace();
+
+
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			throw new RuntimeException(e);
 		}
 		return result;
 	}

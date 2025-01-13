@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,9 +18,9 @@ import com.amit.entity.StudentEntity;
 import com.amit.response.StudentDetails;
 
 @Component
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class StudentMapper {
-	
-	@Autowired
+
 	private ModelMapper modelMapper;
 
 	public List<StudentDetails> map(List<StudentEntity> studentEntityList,

@@ -58,9 +58,8 @@ public class StudentDaoImpl implements StudentDao {
 			return Collections.emptyMap();
 		}
 		
-		var result = tuples.stream().map(AddressEntity::new).collect(Collectors.groupingBy(AddressEntity::getStudentId));
-		
-		return result;
+		return tuples.stream().map(AddressEntity::new).collect(Collectors.groupingBy(AddressEntity::getStudentId));
+
 	}
 
 	@Override
@@ -76,9 +75,8 @@ public class StudentDaoImpl implements StudentDao {
 			return Collections.emptyMap();
 		}
 		
-		var result = tuples.stream().map(CommunicationEntity::new).collect(Collectors.groupingBy(CommunicationEntity::getStudentId));
-		
-		return result;
+		return tuples.stream().map(CommunicationEntity::new).collect(Collectors.groupingBy(CommunicationEntity::getStudentId));
+
 	}
 
 	@Override
@@ -86,8 +84,7 @@ public class StudentDaoImpl implements StudentDao {
 
 		var queryString = getSql(SELECT_STUDENT_TOTAL_COUNT);
 		var query = entityManager.createNativeQuery(queryString, Integer.class);
-		var recordCount = (Integer)query.getSingleResult();
-		return recordCount;
+		return (Integer)query.getSingleResult();
 	}
 	
 	private String getSql(String queryConstant) {

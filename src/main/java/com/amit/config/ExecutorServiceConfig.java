@@ -16,8 +16,7 @@ public class ExecutorServiceConfig {
 	
 	@Bean("asyncTaskExecutor")
 	public AsyncTaskExecutor plateformThreadExecutor() {
-		var adapter = new TaskExecutorAdapter(Executors.newFixedThreadPool(threadPoolCount));
-		return adapter;
+		return new TaskExecutorAdapter(Executors.newFixedThreadPool(threadPoolCount));
 	}
 
 }

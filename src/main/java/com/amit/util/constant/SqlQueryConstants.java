@@ -1,5 +1,9 @@
 package com.amit.util.constant;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SqlQueryConstants {
 	
 	public static final String FIELD_ROLL_NUMBER_LIST = "studentRollnumbers";

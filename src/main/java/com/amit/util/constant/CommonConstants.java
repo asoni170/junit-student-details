@@ -1,5 +1,9 @@
 package com.amit.util.constant;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonConstants {
 	
 	public static final String RESOURCE_STUDENT = "Student";

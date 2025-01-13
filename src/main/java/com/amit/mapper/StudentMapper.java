@@ -26,15 +26,13 @@ public class StudentMapper {
 	public List<StudentDetails> map(List<StudentEntity> studentEntityList,
 			Map<Integer, List<AddressEntity>> addressMap, Map<Integer, List<CommunicationEntity>> communicationMap) {
 		
-		var result = studentEntityList.stream().map(student -> {
+		return studentEntityList.stream().map(student -> {
 			
 			var addressList = addressMap.getOrDefault(student.getStudentId(), List.of());
 			var communicationList = communicationMap.getOrDefault(student.getStudentId(), List.of());
 			
 			return mapToStudentResponse(student, addressList, communicationList);
 		}).toList();
-		
-		return result;
 	}
 	
 	private StudentDetails mapToStudentResponse(

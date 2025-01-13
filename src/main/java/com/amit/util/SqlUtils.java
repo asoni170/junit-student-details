@@ -2,7 +2,6 @@ package com.amit.util;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.amit.config.SqlQueryConfig;

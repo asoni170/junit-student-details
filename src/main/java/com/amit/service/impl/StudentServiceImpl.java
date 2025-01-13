@@ -12,7 +12,6 @@ import java.util.concurrent.ExecutionException;
 import com.amit.exception.ApiException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Service;

@@ -3,11 +3,13 @@ package com.amit.service.impl;
 import static com.amit.util.PageNumberAndSizeValidator.validatePage;
 import static com.amit.util.constant.CommonConstants.PARAMETER_ROLLNUMBER;
 import static com.amit.util.constant.CommonConstants.RESOURCE_STUDENT;
+import static com.amit.util.constant.CommonConstants.TECHNICAL_ERROR_MESSAGE;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import com.amit.exception.ApiException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +74,8 @@ public class StudentServiceImpl implements StudentService {
 			Thread.currentThread().interrupt();
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new ApiException(TECHNICAL_ERROR_MESSAGE);
 		}
 		
 		return result;
@@ -126,7 +129,8 @@ public class StudentServiceImpl implements StudentService {
 			Thread.currentThread().interrupt();
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
+			throw new ApiException(TECHNICAL_ERROR_MESSAGE);
 		}
 		return result;
 	}

@@ -33,4 +33,13 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 	}
 
+	@ExceptionHandler(ApiException.class)
+	public final ResponseEntity<Object> handleAllException(ApiException ex, WebRequest request) throws Exception {
+
+		var error = new ErrorResponseTo(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+				ex.getMessage(), LocalDateTime.now());
+
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+	}
+
 }

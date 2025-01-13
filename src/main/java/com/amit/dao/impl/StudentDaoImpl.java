@@ -26,10 +26,8 @@ import jakarta.persistence.Tuple;
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class StudentDaoImpl implements StudentDao {
 
-	@Autowired
 	private EntityManager entityManager;
 
-	@Autowired
 	private SqlUtils sqlUtils;
 
 	@Override

@@ -13,5 +13,7 @@ public class CommonConstants {
 	public static final String PARAMETER_ROLLNUMBER = "Rollnumber";
 
 	public static final String TECHNICAL_ERROR_MESSAGE = "Technical Error occured, please contact system administrator";
+	public static final String INVALID_PAGE_NUMBER = "Page number can only be possitive number";
+	public static final String INVALID_PAGE_SIZE = "Page size can only be possitive number";
 
 }

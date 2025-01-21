@@ -4,15 +4,18 @@ import com.amit.exception.PageInvalidException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import static com.amit.util.constant.CommonConstants.INVALID_PAGE_NUMBER;
+import static com.amit.util.constant.CommonConstants.INVALID_PAGE_SIZE;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PageNumberAndSizeValidator {
 	
 	public static void validatePage(Integer pageNumber, Integer pageSize) {
-		if(pageNumber <= 0) {
-			throw new PageInvalidException("Page number can only be possitive number");
+		if(pageNumber == null || pageNumber <= 0) {
+			throw new PageInvalidException(INVALID_PAGE_NUMBER);
 		}
-		else if(pageSize <= 0) {
-			throw new PageInvalidException("Page size can only be possitive number");
+		else if(pageSize == null || pageSize <= 0) {
+			throw new PageInvalidException(INVALID_PAGE_SIZE);
 		}
 	}
 

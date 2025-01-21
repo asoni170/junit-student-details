@@ -1,5 +1,6 @@
 package com.amit.util;
 
+import com.amit.exception.PageInvalidException;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -10,35 +11,38 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import static com.amit.util.constant.CommonConstants.INVALID_PAGE_NUMBER;
+import static com.amit.util.constant.CommonConstants.INVALID_PAGE_SIZE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(MockitoJUnitRunner.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public class PageNumberAndSizeValidatorTest {
 
-    @Mock
-    private PageNumberAndSizeValidator mockPageNumberAndSizeValidator;
-
     @Test
-    public void testValidatePage_InvalidPageNumber() {
-        Integer mockPageNumber = -1;
-        Integer mockPageSize = 10;
-
-        MockedStatic mocked = mockStatic(PageNumberAndSizeValidator.class);
-        mocked.when(() -> PageNumberAndSizeValidator.validatePage(mockPageNumber, mockPageSize)).thenThrow(new RuntimeException());
-        mocked.close();
-
+    public void testValidatePage_ShouldThrowException_WhenPageNumberIsNull() {
+        Exception exception = assertThrows(PageInvalidException.class, () -> PageNumberAndSizeValidator.validatePage(null, 10) );
+        assertEquals(INVALID_PAGE_NUMBER, exception.getMessage());
     }
 
     @Test
-    public void testValidatePage_InvalidPageSize() {
-        Integer mockPageNumber = -1;
-        Integer mockPageSize = 10;
+    public void testValidatePage_ShouldThrowException_WhenPageNumberIsNegative() {
+        Exception exception = assertThrows(PageInvalidException.class, () -> PageNumberAndSizeValidator.validatePage(-1, 10) );
+        assertEquals(INVALID_PAGE_NUMBER, exception.getMessage());
+    }
 
-        MockedStatic mocked = mockStatic(PageNumberAndSizeValidator.class);
-        mocked.when(() -> PageNumberAndSizeValidator.validatePage(mockPageNumber, mockPageSize)).thenThrow(new RuntimeException());
-        mocked.close();
+    @Test
+    public void testValidatePage_ShouldThrowException_WhenSizeNumberIsNull() {
+        Exception exception = assertThrows(PageInvalidException.class, () -> PageNumberAndSizeValidator.validatePage(1, null) );
+        assertEquals(INVALID_PAGE_SIZE, exception.getMessage());
+    }
+
+    @Test
+    public void testValidatePage_ShouldThrowException_WhenSizeNumberIsNegative() {
+        Exception exception = assertThrows(PageInvalidException.class, () -> PageNumberAndSizeValidator.validatePage(1, -10) );
+        assertEquals(INVALID_PAGE_SIZE, exception.getMessage());
     }
 }

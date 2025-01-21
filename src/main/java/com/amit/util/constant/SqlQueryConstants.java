@@ -18,4 +18,7 @@ public class SqlQueryConstants {
 	public static final String SELECT_STUDENT_TOTAL_COUNT = "SELECT_STUDENT_TOTAL_COUNT";
 	public static final String SELECT_ALL_STUDENT_PAGINATED = "SELECT_ALL_STUDENT_PAGINATED";
 
+	public static final String MOCK_QUERY_KEY = "MOCK_QUERY_KEY";
+	public static final String MOCK_QUERY_STRING = "MOCK_QUERY_STRING";
+
 }

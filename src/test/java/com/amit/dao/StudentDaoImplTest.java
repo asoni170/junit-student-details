@@ -2,6 +2,7 @@ package com.amit.dao;
 
 import com.amit.dao.impl.StudentDaoImpl;
 import com.amit.util.SqlUtils;
+import com.amit.util.constant.DbConstants;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;
@@ -22,8 +23,10 @@ import java.util.List;
 
 import static com.amit.util.constant.SqlQueryConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -61,17 +64,28 @@ public class StudentDaoImplTest {
     @Test
     public void testFetchStudentByRollNumber() throws NoSuchMethodException{
 
-        var mockRollNumbers = List.of("ROLL001", "ROLL002", "ROLL003");
+        var mockRollNumbers = List.of("ROLL001");
 
-        Mockito.lenient().when(mockSqlUtils.getSql(MOCK_QUERY_KEY)).thenReturn(MOCK_QUERY_STRING);
-        Method methodGetSql = StudentDaoImpl.class.getDeclaredMethod("getSql", String.class);
-        methodGetSql.setAccessible(Boolean.TRUE);
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_STUDENT_BY_ROLL_NUMBERS_IN))
+                .thenReturn("select s.std_id, s.std_name, s.str_roll_no from t_student s where s.str_roll_no in :studentRollnumbers");
 
         Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
         Mockito.lenient().when(mockQuery.setParameter(FIELD_ROLL_NUMBER_LIST, mockRollNumbers)).thenReturn(mockQuery);
         Mockito.lenient().when(mockQuery.getResultList()).thenReturn(List.of(mockTuple));
 
+        Mockito.lenient().when(mockTuple.get(DbConstants.STUDENT_ID, Integer.class)).thenReturn(1);
+        Mockito.lenient().when(mockTuple.get(DbConstants.STUDENT_ROLL_NUMBER, String.class)).thenReturn("ROLL001");
+        Mockito.lenient().when(mockTuple.get(DbConstants.STUDENT_NAME, String.class)).thenReturn("Test Name");
+
         var result = studentDao.fetchStudentByRollNumber(mockRollNumbers);
-        System.out.println(result);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(1, result.get(0).getStudentId());
+        assertEquals("ROLL001", result.get(0).getRollNumber());
+        assertEquals("Test Name", result.get(0).getStudentName());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(1)).setParameter(FIELD_ROLL_NUMBER_LIST, mockRollNumbers);
+        verify(mockQuery, times(1)).getResultList();
     }
 }

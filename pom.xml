@@ -24,6 +24,13 @@
             **com.amit.response/**,
             **com.amit.util.constant.**
         </sonar.coverage.exclusions>
+        <sonar.exclusions>
+            **pom.xml,
+            **com.amit.entity/**,
+            **com.amit.dto/**,
+            **com.amit.response/**,
+            **com.amit.util.constant.**
+        </sonar.exclusions>
     </properties>
     <dependencies>
         <!-- Existing Dependencies -->

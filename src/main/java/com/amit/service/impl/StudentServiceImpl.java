@@ -71,9 +71,7 @@ public class StudentServiceImpl implements StudentService {
 			result.setStudents(studentMapper.map(studentEntityList, addressListCF.get(), communicationListCF.get()));
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			e.printStackTrace();
 		} catch (ExecutionException e) {
-			e.printStackTrace();
 			throw new ApiException(TECHNICAL_ERROR_MESSAGE);
 		}
 		
@@ -126,7 +124,6 @@ public class StudentServiceImpl implements StudentService {
 
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 			throw new ApiException(TECHNICAL_ERROR_MESSAGE);

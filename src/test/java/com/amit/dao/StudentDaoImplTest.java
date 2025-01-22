@@ -2,7 +2,6 @@ package com.amit.dao;
 
 import com.amit.dao.impl.StudentDaoImpl;
 import com.amit.util.SqlUtils;
-import com.amit.util.constant.DbConstants;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;

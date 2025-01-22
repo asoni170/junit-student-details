@@ -1,7 +1,5 @@
 package com.amit.entity;
 
-import com.amit.util.constant.DbConstants;
-
 import jakarta.persistence.Tuple;
 import lombok.Getter;
 

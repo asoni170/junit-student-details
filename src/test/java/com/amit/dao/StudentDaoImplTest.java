@@ -19,6 +19,7 @@ import org.mockito.quality.Strictness;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.amit.util.constant.DbConstants.*;
@@ -89,6 +90,28 @@ public class StudentDaoImplTest {
     }
 
     @Test
+    public void testfetchStudentByRollNumber_EmpltyList(){
+
+        var mockRollNumbers = List.of("ROLL001");
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_STUDENT_BY_ROLL_NUMBERS_IN)).thenReturn(MOCK_QUERY_STRING);
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(FIELD_ROLL_NUMBER_LIST, mockRollNumbers)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getResultList()).thenReturn(Collections.emptyList());
+
+        var result = studentDao.fetchStudentByRollNumber(mockRollNumbers);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(1)).setParameter(FIELD_ROLL_NUMBER_LIST, mockRollNumbers);
+        verify(mockQuery, times(1)).getResultList();
+        verify(mockTuple, times(0)).get(anyString());
+    }
+
+    @Test
     public void testFetchAddressListByStudentId(){
 
         var mockStudentIds = List.of(1);
@@ -115,6 +138,27 @@ public class StudentDaoImplTest {
         verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
         verify(mockQuery, times(1)).setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds);
         verify(mockQuery, times(1)).getResultList();
+    }
+
+    @Test
+    public void testFetchAddressListByStudentId_EmptyList(){
+
+        var mockStudentIds = List.of(1);
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_ADDRESS_BY_STUDENT_ID)).thenReturn(MOCK_QUERY_STRING);
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getResultList()).thenReturn(Collections.emptyList());
+
+        var result = studentDao.fetchAddressListByStudentId(mockStudentIds);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(1)).setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds);
+        verify(mockTuple, times(0)).get(anyString());
     }
 
     @Test
@@ -146,6 +190,27 @@ public class StudentDaoImplTest {
         verify(mockQuery, times(1)).setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds);
         verify(mockQuery, times(1)).getResultList();
 
+    }
+
+    @Test
+    public void testFetchCommunicationListByStudentId_EmptyList(){
+
+        var mockStudentIds = List.of(1);
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_COMMUNICATION_BY_STUDENT_ID)).thenReturn(MOCK_QUERY_STRING);
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getResultList()).thenReturn(Collections.emptyList());
+
+        var result = studentDao.fetchCommunicationListByStudentId(mockStudentIds);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(1)).setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds);
+        verify(mockTuple, times(0)).get(anyString());
     }
 
     @Test
@@ -193,6 +258,29 @@ public class StudentDaoImplTest {
         verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
         verify(mockQuery, times(2)).setParameter(anyString(), anyInt());
         verify(mockQuery, times(1)).getResultList();
+    }
+
+    @Test
+    public void testGetPaginatedStudent_EmptyList(){
+
+        var mockPageNumber = 1;
+        var mockPageSize = 5;
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_ALL_STUDENT_PAGINATED)).thenReturn(MOCK_QUERY_STRING);
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(PAGE_NUMBER, mockPageNumber-1)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(PAGE_SIZE, mockPageSize)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getResultList()).thenReturn(Collections.emptyList());
+
+        var result = studentDao.getPaginatedStudent(mockPageNumber, mockPageSize);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(2)).setParameter(anyString(), anyInt());
+        verify(mockTuple, times(0)).get(anyString());
     }
 
 }

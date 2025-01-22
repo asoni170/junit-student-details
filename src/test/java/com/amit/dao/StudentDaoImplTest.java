@@ -21,12 +21,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static com.amit.util.constant.DbConstants.*;
 import static com.amit.util.constant.SqlQueryConstants.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -73,11 +72,12 @@ public class StudentDaoImplTest {
         Mockito.lenient().when(mockQuery.setParameter(FIELD_ROLL_NUMBER_LIST, mockRollNumbers)).thenReturn(mockQuery);
         Mockito.lenient().when(mockQuery.getResultList()).thenReturn(List.of(mockTuple));
 
-        Mockito.lenient().when(mockTuple.get(DbConstants.STUDENT_ID, Integer.class)).thenReturn(1);
-        Mockito.lenient().when(mockTuple.get(DbConstants.STUDENT_ROLL_NUMBER, String.class)).thenReturn("ROLL001");
-        Mockito.lenient().when(mockTuple.get(DbConstants.STUDENT_NAME, String.class)).thenReturn("Test Name");
+        Mockito.lenient().when(mockTuple.get(STUDENT_ID, Integer.class)).thenReturn(1);
+        Mockito.lenient().when(mockTuple.get(STUDENT_ROLL_NUMBER, String.class)).thenReturn("ROLL001");
+        Mockito.lenient().when(mockTuple.get(STUDENT_NAME, String.class)).thenReturn("Test Name");
 
         var result = studentDao.fetchStudentByRollNumber(mockRollNumbers);
+
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(1, result.get(0).getStudentId());
@@ -86,6 +86,36 @@ public class StudentDaoImplTest {
 
         verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
         verify(mockQuery, times(1)).setParameter(FIELD_ROLL_NUMBER_LIST, mockRollNumbers);
+        verify(mockQuery, times(1)).getResultList();
+    }
+
+    @Test
+    public void testFetchAddressListByStudentId(){
+
+        var mockStudentIds = List.of(1);
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_ADDRESS_BY_STUDENT_ID))
+                .thenReturn("select add_id, add_line_1, add_line_2, add_city, add_state, add_pincode, add_country, std_id from t_address where std_id in :studentIds");
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getResultList()).thenReturn(List.of(mockTuple));
+
+        Mockito.lenient().when(mockTuple.get(ADDRESS_ID, Integer.class)).thenReturn(1);
+        Mockito.lenient().when(mockTuple.get(ADDRESS_LINE_1, String.class)).thenReturn("Demo Line 1");
+        Mockito.lenient().when(mockTuple.get(ADDRESS_LINE_2, String.class)).thenReturn("Demo Line 2");
+        Mockito.lenient().when(mockTuple.get(STUDENT_ID, Integer.class)).thenReturn(1);
+
+        var result = studentDao.fetchAddressListByStudentId(mockStudentIds);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.containsKey(1));
+        assertEquals("Demo Line 1", result.get(1).stream().findFirst().get().getLine1());
+        assertEquals("Demo Line 2", result.get(1).stream().findFirst().get().getLine2());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(1)).setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds);
         verify(mockQuery, times(1)).getResultList();
     }
 }

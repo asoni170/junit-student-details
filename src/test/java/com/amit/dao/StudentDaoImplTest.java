@@ -18,6 +18,7 @@ import org.mockito.quality.Strictness;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.amit.util.constant.DbConstants.*;
@@ -64,8 +65,7 @@ public class StudentDaoImplTest {
 
         var mockRollNumbers = List.of("ROLL001");
 
-        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_STUDENT_BY_ROLL_NUMBERS_IN))
-                .thenReturn("select s.std_id, s.std_name, s.str_roll_no from t_student s where s.str_roll_no in :studentRollnumbers");
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_STUDENT_BY_ROLL_NUMBERS_IN)).thenReturn(MOCK_QUERY_STRING);
 
         Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
         Mockito.lenient().when(mockQuery.setParameter(FIELD_ROLL_NUMBER_LIST, mockRollNumbers)).thenReturn(mockQuery);
@@ -93,8 +93,7 @@ public class StudentDaoImplTest {
 
         var mockStudentIds = List.of(1);
 
-        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_ADDRESS_BY_STUDENT_ID))
-                .thenReturn("select add_id, add_line_1, add_line_2, add_city, add_state, add_pincode, add_country, std_id from t_address where std_id in :studentIds");
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_ADDRESS_BY_STUDENT_ID)).thenReturn(MOCK_QUERY_STRING);
 
         Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
         Mockito.lenient().when(mockQuery.setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds)).thenReturn(mockQuery);
@@ -117,4 +116,83 @@ public class StudentDaoImplTest {
         verify(mockQuery, times(1)).setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds);
         verify(mockQuery, times(1)).getResultList();
     }
+
+    @Test
+    public void testFetchCommunicationListByStudentId(){
+
+        var mockStudentIds = List.of(1);
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_COMMUNICATION_BY_STUDENT_ID)).thenReturn(MOCK_QUERY_STRING);
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getResultList()).thenReturn(Arrays.asList(mockTuple));
+
+        Mockito.lenient().when(mockTuple.get(COMMUNICATION_ID, Integer.class)).thenReturn(1);
+        Mockito.lenient().when(mockTuple.get(STUDENT_ID, Integer.class)).thenReturn(1);
+        Mockito.lenient().when(mockTuple.get(COMMUNICATION_CHANNEL_TYPE, String.class)).thenReturn("Phone");
+        Mockito.lenient().when(mockTuple.get(COMMUNICATION_CHANNEL_VALUE, String.class)).thenReturn("9876543210");
+
+        var result = studentDao.fetchCommunicationListByStudentId(mockStudentIds);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(1, result.get(1).get(0).getStudentId());
+        assertEquals(1, result.get(1).get(0).getCommId());
+        assertEquals("Phone", result.get(1).get(0).getCommChannel());
+        assertEquals("9876543210", result.get(1).get(0).getCommValue());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(1)).setParameter(FIELD_STUDENT_ID_LIST, mockStudentIds);
+        verify(mockQuery, times(1)).getResultList();
+
+    }
+
+    @Test
+    public void testGetTotalRecordCount(){
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_STUDENT_TOTAL_COUNT)).thenReturn(MOCK_QUERY_STRING);
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Integer.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getSingleResult()).thenReturn(1);
+
+        var result = studentDao.getTotalRecordCount();
+
+        assertNotNull(result);
+        assertEquals(1, result);
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Integer.class));
+        verify(mockQuery, times(1)).getSingleResult();
+    }
+
+    @Test
+    public void testGetPaginatedStudent(){
+
+        var mockPageNumber = 1;
+        var mockPageSize = 5;
+
+        Mockito.lenient().when(mockSqlUtils.getSql(SELECT_ALL_STUDENT_PAGINATED)).thenReturn(MOCK_QUERY_STRING);
+
+        Mockito.lenient().when(mockEntityManager.createNativeQuery(anyString(), eq(Tuple.class))).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(PAGE_NUMBER, mockPageNumber-1)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.setParameter(PAGE_SIZE, mockPageSize)).thenReturn(mockQuery);
+        Mockito.lenient().when(mockQuery.getResultList()).thenReturn(List.of(mockTuple, mockTuple, mockTuple, mockTuple, mockTuple));
+
+        Mockito.lenient().when(mockTuple.get(STUDENT_ID, Integer.class)).thenReturn(1);
+        Mockito.lenient().when(mockTuple.get(STUDENT_NAME, String.class)).thenReturn("Demo Name");
+        Mockito.lenient().when(mockTuple.get(STUDENT_ROLL_NUMBER, String.class)).thenReturn("Demo Roll");
+
+        var result = studentDao.getPaginatedStudent(mockPageNumber, mockPageSize);
+
+        assertNotNull(result);
+        assertEquals(5, result.size());
+        assertEquals(1, result.stream().findAny().get().getStudentId());
+        assertEquals("Demo Name", result.stream().findAny().get().getStudentName());
+        assertEquals("Demo Roll", result.stream().findAny().get().getRollNumber());
+
+        verify(mockEntityManager, times(1)).createNativeQuery(anyString(), eq(Tuple.class));
+        verify(mockQuery, times(2)).setParameter(anyString(), anyInt());
+        verify(mockQuery, times(1)).getResultList();
+    }
+
 }

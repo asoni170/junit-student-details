@@ -25,7 +25,7 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
 	}
 	
 	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) throws Exception {
+	public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
 		
 		var error = new ErrorResponseTo(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
 				ex.getMessage(), LocalDateTime.now());
@@ -34,7 +34,7 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
 	}
 
 	@ExceptionHandler(ApiException.class)
-	public final ResponseEntity<Object> handleAllException(ApiException ex, WebRequest request) throws Exception {
+	public final ResponseEntity<Object> handleAllException(ApiException ex, WebRequest request) {
 
 		var error = new ErrorResponseTo(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
 				ex.getMessage(), LocalDateTime.now());

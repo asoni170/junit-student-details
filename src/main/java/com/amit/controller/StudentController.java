@@ -58,6 +58,4 @@ public class StudentController implements ApiController {
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 	}
 
-public 
-
 }

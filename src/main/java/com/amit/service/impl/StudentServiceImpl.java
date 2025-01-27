@@ -57,18 +57,18 @@ public class StudentServiceImpl implements StudentService {
 		
 		var studentIds = studentEntityList.stream().map(StudentEntity::getStudentId).toList();
 		
-		var addressListCF = CompletableFuture.supplyAsync(
+		var addressMapCF = CompletableFuture.supplyAsync(
 				() -> studentDao.fetchAddressListByStudentId(studentIds), executor);
 		
-		var communicationListCF = CompletableFuture.supplyAsync(
+		var communicationMapCF = CompletableFuture.supplyAsync(
 				() -> studentDao.fetchCommunicationListByStudentId(studentIds), executor);
 		
-		CompletableFuture.allOf(addressListCF, communicationListCF).join();
+		CompletableFuture.allOf(addressMapCF, communicationMapCF).join();
 		
 		var result = new StudentResponse();
 		
 		try {
-			result.setStudents(studentMapper.map(studentEntityList, addressListCF.get(), communicationListCF.get()));
+			result.setStudents(studentMapper.map(studentEntityList, addressMapCF.get(), communicationMapCF.get()));
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		} catch (ExecutionException e) {
@@ -89,12 +89,12 @@ public class StudentServiceImpl implements StudentService {
 		
 		var studentIds = studentEntityList.stream().map(StudentEntity::getStudentId).toList();
 		
-		var addressList = studentDao.fetchAddressListByStudentId(studentIds);
-		var communicationList = studentDao.fetchCommunicationListByStudentId(studentIds);
+		var addressMap = studentDao.fetchAddressListByStudentId(studentIds);
+		var communicationMap = studentDao.fetchCommunicationListByStudentId(studentIds);
 		
 		
 		var result = new StudentResponse();
-		result.setStudents(studentMapper.map(studentEntityList, addressList, communicationList));
+		result.setStudents(studentMapper.map(studentEntityList, addressMap, communicationMap));
 		
 		return result;
 	}

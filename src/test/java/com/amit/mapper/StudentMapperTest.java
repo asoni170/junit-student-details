@@ -1,5 +1,7 @@
 package com.amit.mapper;
 
+import com.amit.entity.AddressEntity;
+import com.amit.entity.CommunicationEntity;
 import com.amit.entity.StudentEntity;
 import com.amit.response.StudentDetails;
 import jakarta.persistence.Tuple;
@@ -15,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.amit.mock.MockEntityConstants.*;
@@ -33,6 +36,36 @@ public class StudentMapperTest {
 
     @Mock
     private Tuple mockTuple;
+
+    @Test
+    public void testMap(){
+
+        var mockStudentEntityList = List.of(getMockStudent());
+
+        var mockAddressEntityMap = new HashMap<Integer, List<AddressEntity>>();
+        var mockCommunicationEntityMap = new HashMap<Integer, List<CommunicationEntity>>();
+        mockAddressEntityMap.put(MOCK_STUDENT_ID, List.of(getMockAddress()));
+        mockCommunicationEntityMap.put(MOCK_STUDENT_ID, List.of(getMockCommunication()));
+
+        var result = studentMapper.map(mockStudentEntityList, mockAddressEntityMap, mockCommunicationEntityMap);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        assertEquals(MOCK_STUDENT_ID, result.get(0).getStudentId());
+        assertEquals(MOCK_STUDENT_NAME, result.get(0).getStudentName());
+        assertEquals(MOCK_STUDENT_ROLLNUMBER, result.get(0).getRollNumber());
+
+        assertEquals(MOCK_ADDRESS_LINE_1, result.get(0).getAddressList().get(0).getLine1());
+        assertEquals(MOCK_ADDRESS_LINE_2, result.get(0).getAddressList().get(0).getLine2());
+        assertEquals(MOCK_ADDRESS_CITY, result.get(0).getAddressList().get(0).getCity());
+        assertEquals(MOCK_ADDRESS_STATE, result.get(0).getAddressList().get(0).getState());
+        assertEquals(MOCK_ADDRESS_PINCODE, result.get(0).getAddressList().get(0).getPincode());
+        assertEquals(MOCK_ADDRESS_COUNTRY, result.get(0).getAddressList().get(0).getCountry());
+
+        assertEquals(MOCK_COMMUNICATION_CHANNEL_TYPE, result.get(0).getCommunicationList().get(0).getCommChannel());
+        assertEquals(MOCK_COMMUNICATION_CHANNEL_VALUE, result.get(0).getCommunicationList().get(0).getCommValue());
+    }
 
     @Test
     public void testMapToStudentResponse() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {

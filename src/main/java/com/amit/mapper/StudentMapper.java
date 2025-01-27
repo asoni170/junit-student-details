@@ -6,7 +6,6 @@ import java.util.Map;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import com.amit.dto.AddressDto;
@@ -19,8 +18,6 @@ import com.amit.response.StudentDetails;
 @Component
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class StudentMapper {
-
-	private ModelMapper modelMapper;
 
 	public List<StudentDetails> map(List<StudentEntity> studentEntityList,
 			Map<Integer, List<AddressEntity>> addressMap, Map<Integer, List<CommunicationEntity>> communicationMap) {
@@ -39,11 +36,26 @@ public class StudentMapper {
 		
 		var communicationList = new ArrayList<CommunicationDto>();
 		var addressList = new ArrayList<AddressDto>();
-		
-		addressEntityList.stream()
-		      .forEach(address -> addressList.add(modelMapper.map(address, AddressDto.class)));
-		communicationEntityList.stream()
-		      .forEach(communication -> communicationList.add(modelMapper.map(communication, CommunicationDto.class)));
+
+		for(var address : addressEntityList){
+			var dto = new AddressDto();
+			dto.setLine1(address.getLine1());
+			dto.setLine2(address.getLine2());
+			dto.setCity(address.getCity());
+			dto.setState(address.getState());
+			dto.setPincode(address.getPincode());
+			dto.setCountry(address.getCountry());
+
+			addressList.add(dto);
+		}
+
+		for(var communication : communicationEntityList){
+			var dto = new CommunicationDto();
+			dto.setCommChannel(communication.getCommChannel());
+			dto.setCommValue(communication.getCommValue());
+
+			communicationList.add(dto);
+		}
 		
 		return StudentDetails.builder()
 				.studentId(student.getStudentId())

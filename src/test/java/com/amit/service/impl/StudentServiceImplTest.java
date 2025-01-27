@@ -61,4 +61,15 @@ public class StudentServiceImplTest {
 
         verify(studentDao, times(1)).fetchStudentByRollNumber(mockRollnumber);
     }
+
+    @Test
+    public void testGetStudentDetailsByRollnumbers_EmpltyList(){
+
+        var mockRollnumber = List.of("ROL001", "ROLL002");
+
+        Mockito.lenient().when(studentDao.fetchStudentByRollNumber(mockRollnumber)).thenReturn(Collections.emptyList());
+
+        assertThrows(ResourceNotFoundException.class, () -> studentService.getStudentDetailsByRollnumbers(mockRollnumber));
+        verify(studentDao, times(1)).fetchStudentByRollNumber(mockRollnumber);
+    }
 }

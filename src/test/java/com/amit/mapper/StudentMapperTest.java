@@ -1,9 +1,5 @@
 package com.amit.mapper;
 
-import com.amit.dto.AddressDto;
-import com.amit.dto.CommunicationDto;
-import com.amit.entity.AddressEntity;
-import com.amit.entity.CommunicationEntity;
 import com.amit.entity.StudentEntity;
 import com.amit.response.StudentDetails;
 import jakarta.persistence.Tuple;
@@ -17,8 +13,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.modelmapper.ModelMapper;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

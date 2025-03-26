@@ -26,7 +26,7 @@ public interface ApiController {
 	
 	@GetMapping("/details/singlethread")
 	public ResponseEntity<StudentResponse> getStudentDetailsByRollnumberSinglethread(
-			@RequestParam List<String> rollNumbers);
+			@RequestParam List<String> rollNumbers)
 	
 	@GetMapping("/all")
 	public ResponseEntity<StudentResponse> getAllStudent(
